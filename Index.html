@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bihpuria W.R. Sub-District - Data Entry & View</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #007bff;
+      --primary-dark: #0056b3;
+      --view-btn: #28a745;
+      --view-btn-dark: #1e7e34;
+      --bg: #f2f6fb;
+      --text: #333;
+      --white: #fff;
+      --radius: 12px;
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      --max-width: 900px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 40px 20px 80px; /* extra bottom padding for footer */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: var(--max-width);
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    #datetime {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .section {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 25px 40px;
+      margin: 20px 0;
+      width: 100%;
+      max-width: var(--max-width);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section h2 {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1 1 200px;
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 14px 0;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.15s ease;
+      min-width: 140px;
+      max-width: 300px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn.view-btn {
+      background-color: var(--view-btn);
+    }
+
+    .btn.view-btn:hover {
+      background-color: var(--view-btn-dark);
+    }
+
+    @media (max-width: 768px) {
+      .section {
+        padding: 20px;
+      }
+      .btn-group {
+        gap: 15px;
+      }
+      .btn {
+        font-size: 1rem;
+        min-width: 120px;
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .section h2 {
+        font-size: 1.1rem;
+      }
+
+      .btn {
+        font-size: 0.95rem;
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    /* PASSWORD MODAL */
+    #password-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #password-modal.active {
+      display: flex;
+    }
+
+    #password-modal .modal-content {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 30px 40px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    #password-modal h2 {
+      margin-bottom: 20px;
+      color: var(--primary-dark);
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+
+    #password-input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+
+    #password-input:focus {
+      border-color: var(--primary);
+    }
+
+    #password-submit {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+
+    #password-submit:hover {
+      background-color: var(--primary-dark);
+    }
+
+    #password-error {
+      color: #d32f2f;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    /* Footer */
+    .footer-heart{text-align:center;font-family: open sans, sans-serif;}
+
+.footer-heart a{border-bottom: 1px solid #453886;color: #453886;padding-bottom: .25em; text-decoration: none;}
+
+.footer-heart a:hover{color:#2196f3; background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23453886' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-size: 20%;
+  border-bottom: 0;
+  padding-bottom: .3em;
+  text-decoration: none;}
+
+.emoji{vertical-align: middle;}
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD MODAL -->
+  <div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <h2 id="modal-title">Enter Password</h2>
+      <input type="password" id="password-input" placeholder="Password" autocomplete="off" />
+      <button id="password-submit">Submit</button>
+      <div id="password-error" role="alert">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <header>
+    <h1>Bihpuria W.R. Sub-District Office - Data Entry & View</h1>
+    <div id="datetime">Loading date and time...</div>
+  </header>
+
+  <div class="section">
+    <h2>Brahmaputra River</h2>
+    <div class="btn-group">
+      <button class="btn enter-btn" data-url="https://YOUR_LINK_BRAHMAPUTRA_ENTER">Enter Data</button>
+      <button class="btn view-btn" onclick="window.open('https://YOUR_LINK_BRAHMAPUTRA_VIEW', '_blank')">View Data</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Subansiri River</h2>
+    <div class="btn-group">
+      <button class="btn enter-btn" data-url="https://YOUR_LINK_SUBANSIRI_ENTER">Enter Data</button>
+      <button class="btn view-btn" onclick="window.open('https://YOUR_LINK_SUBANSIRI_VIEW', '_blank')">View Data</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Dikrong River</h2>
+    <div class="btn-group">
+      <button class="btn enter-btn" data-url="https://YOUR_LINK_DIKRONG_ENTER">Enter Data</button>
+      <button class="btn view-btn" onclick="window.open('https://YOUR_LINK_DIKRONG_VIEW', '_blank')">View Data</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Durpang River</h2>
+    <div class="btn-group">
+      <button class="btn enter-btn" data-url="https://YOUR_LINK_DURPANG_ENTER">Enter Data</button>
+      <button class="btn view-btn" onclick="window.open('https://YOUR_LINK_DURPANG_VIEW', '_blank')">View Data</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Sessa River</h2>
+    <div class="btn-group">
+      <button class="btn enter-btn" data-url="https://YOUR_LINK_SESSA_ENTER">Enter Data</button>
+      <button class="btn view-btn" onclick="window.open('https://YOUR_LINK_SESSA_VIEW', '_blank')">View Data</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Rainfall Section</h2>
+    <div class="btn-group">
+      <button class="btn enter-btn" data-url="https://YOUR_LINK_RAINFALL_ENTER">Enter Data</button>
+      <button class="btn view-btn" onclick="window.open('https://YOUR_LINK_RAINFALL_VIEW', '_blank')">View Data</button>
+    </div>
+  </div>
+
+  <footer>
+  
+   <p class="footer-heart" style="margin-bottom: 5px;"  id="copyright">© <span id="year"></span> Govtify. 
+    Made with 
+    <g-emoji class="g-emoji" alias="heart" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2764.png">
+      <img class="emoji" alt="heart" height="20" width="20" src="https://github.githubassets.com/images/icons/emoji/unicode/2764.png">
+    </g-emoji> 
+    by <a href="https://govtify.com/" target="_blank" style="color: #007bff; text-decoration: none;">Sunil</a>
+  </p>
+  </footer>
+  
+<script>
+  // Set current year dynamically
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+  
+
+<script>
+  const PASSWORD = "admin"; // Change to your desired password
+  const STORAGE_KEY = 'dataEntryPasswordExpiry';
+
+  const modal = document.getElementById('password-modal');
+  const passwordInput = document.getElementById('password-input');
+  const passwordSubmit = document.getElementById('password-submit');
+  const passwordError = document.getElementById('password-error');
+
+  let pendingUrl = null;
+
+  // Check if password is still valid (1 day)
+  function isPasswordValid() {
+    const expiry = localStorage.getItem(STORAGE_KEY);
+    if (!expiry) return false;
+    const now = Date.now();
+    return now < parseInt(expiry, 10);
+  }
+
+  // Show modal
+  function showModal(url) {
+    pendingUrl = url;
+    passwordInput.value = '';
+    passwordError.style.display = 'none';
+    modal.classList.add('active');
+    passwordInput.focus();
+  }
+
+  // Hide modal
+  function hideModal() {
+    modal.classList.remove('active');
+  }
+
+  // Handle successful password entry
+  function onPasswordSuccess() {
+    // Set expiry for 1 day from now
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    localStorage.setItem(STORAGE_KEY, Date.now() + oneDayMs);
+    hideModal();
+    openUrl(pendingUrl);
+    pendingUrl = null;
+  }
+
+  // Open the data entry URL in new tab
+  function openUrl(url) {
+    window.open(url, '_blank');
+  }
+
+  // Handle Enter Data button clicks
+  document.querySelectorAll('.enter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const url = button.getAttribute('data-url');
+      if (isPasswordValid()) {
+        openUrl(url);
+      } else {
+        showModal(url);
+      }
+    });
+  });
+
+  // Handle password submit
+  passwordSubmit.addEventListener('click', () => {
+    const entered = passwordInput.value;
+    if (entered === PASSWORD) {
+      onPasswordSuccess();
+    } else {
+      passwordError.style.display = 'block';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  });
+
+  // Allow Enter key to submit password
+  passwordInput.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      passwordSubmit.click();
+    }
+  });
+
+  // Date and time update
+  function updateDateTime() {
+    const now = new Date();
+    const datetime = now.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    document.getElementById('datetime').textContent = datetime;
+  }
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+</script>
+
+</body>
+</html>
